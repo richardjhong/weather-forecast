@@ -1,5 +1,6 @@
-hr {
-  height: 10px;
+.jumbotron {
+  background-image: linear-gradient(to right, #3463BA , #21094C);
+  color: white;
 }
 
 .weather-card {
@@ -10,4 +11,15 @@ hr {
 .forecast-container {
   border-color: red;
   height: 500px;
+}
+
+.forecast-card {
+  background-color: #2E3E4F;
+  color: white;
+}
+
+#submit-button {
+  background-color: #5097E6;
+  color: #CCE1E7;
+  border-radius: 5px;
 }

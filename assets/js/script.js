@@ -5,10 +5,11 @@ var APIKEY = '21ef4c0bff15173a6d1700345f872e1b'
 
 var contentContainerEl = $('#column-container')
 var currentWeatherEl = $('<div>')
-currentWeatherEl.attr({class: 'col-10 weather-display-container'})
+currentWeatherEl.attr({class: 'col-10 col-lg-6 weather-display-container'})
+var savedSearchContainer = $('#saved-search-container')
 
 var currentWeatherInfo = $('<div>').attr({class: 'card p-3 my-3 weather-card d-flex flex-column'})
-var forecastInfoContainer = $('<div>').attr({class: 'forecast-container d-flex'})
+var forecastInfoContainer = $('<div>').attr({class: 'forecast-container d-flex justify-content-between'})
 
 var latitude, longitude
 currentWeatherEl.append(currentWeatherInfo)
@@ -42,13 +43,12 @@ async function getWeather(city) {
     populateForecastWeatherCardContent(cityName)
     return;
   }
-  console.log('weatherData right now: ', weatherData)
+
   fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&units=imperial&appid=${APIKEY}`)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      console.log('data from forecast: ', data)
       for (let i = 1; i < 6; i++) {
         let individualDayData = data.daily[i]
         weatherData[cityName]["forecast"][`${new Date(individualDayData.dt * 1000).toLocaleDateString("en-US")}`] = {
@@ -59,6 +59,7 @@ async function getWeather(city) {
         }
       }
       localStorage.setItem('weatherData', JSON.stringify(weatherData))
+      populateForecastWeatherCardContent(cityName)
     });
 
   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${APIKEY}`)
@@ -66,7 +67,6 @@ async function getWeather(city) {
       return response.json();
     })
     .then(function (data) {
-      console.log('data from current weather: ', data)     
       weatherData[cityName]["currentWeather"] = {
           header: `${data.name} (${currentDate})`,
           temp: data.main.temp,
@@ -76,15 +76,19 @@ async function getWeather(city) {
       }
       localStorage.setItem('weatherData', JSON.stringify(weatherData))
       populateCurrentWeatherCardContent(cityName)
-      populateForecastWeatherCardContent(cityName)
-    });
-  
+    }); 
+  var retrieveCityWeatherButton = $('<button>').attr({class: 'my-2', id: 'retrieve-weather-btn'}).text(cityName)
+  savedSearchContainer.append(retrieveCityWeatherButton)
 }
 
 formContainer.addEventListener('click', function(e) {
   if (e.target.id === 'submit-button') {
     var cityName = (cityTextInput.value)
     getWeather(cityName)
+  }
+
+  if (e.target.id === 'retrieve-weather-btn') {
+    getWeather(e.target.innerHTML)
   }
 });
 
@@ -124,28 +128,34 @@ async function populateForecastWeatherCardContent(cityName) {
   var forecastData = weatherData[cityName].forecast
   var forecastCard = $('<div>').attr({class: 'card p-3 my-3 forecast-card'})
 
-  console.log("forecastData: ", forecastData)
-
   Object.keys(forecastData).forEach(key => {
-    console.log('key: ', forecastData[key])
     var clone = forecastCard.clone()
-    var forecastCardHeader = $('<h3>').text(key)
-    var forecastCardTemp = $('<text>').text(forecastData[key].temp)
-    var forecastCardWind = $('<text>').text(forecastData[key].wind)
-    var forecastCardHumidity = $('<text>').text(forecastData[key].humidity)
+    var forecastCardHeader = $('<h5>').text(key)
+    var forecastCardIcon = $('<img>').attr({'src': `http://openweathermap.org/img/wn/${forecastData[key].icon}.png`, 'height': '50px', 'width': '50px'})
+    var forecastCardTemp = $('<text>').text(`Hi/Low Temp: ${forecastData[key].temp} ℉`)
+    var forecastCardWind = $('<text>').text(`Wind: ${forecastData[key].wind} MPH`)
+    var forecastCardHumidity = $('<text>').text(`Humidity: ${forecastData[key].humidity} %`)
     clone.append(forecastCardHeader)
+    clone.append(forecastCardIcon)
     clone.append(forecastCardTemp)
     clone.append(forecastCardWind)
     clone.append(forecastCardHumidity)
-  
-    
-  
-  
+
     forecastInfoContainer.append(clone)
   })
-
- 
-
-
 }
+
+(async function appendCitySearchButton() {
+  var weatherData = await JSON.parse(localStorage.getItem("weatherData"))
+
+  if (weatherData) {
+    var retrieveCityWeatherButton = $('<button>').attr({class: 'my-2', id: 'retrieve-weather-btn'})
+  
+    Object.keys(weatherData).forEach(city => {
+      var clone = retrieveCityWeatherButton.clone().text(city)
+      clone.text(city)
+      savedSearchContainer.append(clone)
+    })
+  }
+})()
 
