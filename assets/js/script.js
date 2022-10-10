@@ -30,7 +30,9 @@ async function getWeather(city) {
   var currentDate = new Date().toLocaleDateString("en-US")
   var latitude, longitude, cityName
   [latitude, longitude, cityName] = await getLatLonCoordinates(city)
+  // check if localStorage has weatherData object already; if not then create as object
   var weatherData = JSON.parse(localStorage.getItem("weatherData")) || {}
+  // structures weatherData as needed if it is empty 
   if (Object.keys(weatherData).length === 0 || weatherData[cityName] === undefined) {
     weatherData[cityName] = {
       forecast: {},
@@ -38,6 +40,7 @@ async function getWeather(city) {
     }
   } 
 
+  // if weeatherData...header includes the currentDate, this implies that there is already information stored for the city being searched that happened today. As such, there's no need to fetch the currentWeather again for the same day and a return statement is used to exit the function prior to reaching the following fetch API requests.
   if (weatherData[cityName].currentWeather.header && weatherData[cityName].currentWeather.header.includes(currentDate)) {
     populateCurrentWeatherCardContent(cityName)
     populateForecastWeatherCardContent(cityName)
@@ -49,6 +52,7 @@ async function getWeather(city) {
       return response.json();
     })
     .then(function (data) {
+      // 1 -6 correspond to tomorrow, the day after tomorrow, etc.
       for (let i = 1; i < 6; i++) {
         let individualDayData = data.daily[i]
         weatherData[cityName]["forecast"][`${new Date(individualDayData.dt * 1000).toLocaleDateString("en-US")}`] = {
@@ -77,6 +81,7 @@ async function getWeather(city) {
       localStorage.setItem('weatherData', JSON.stringify(weatherData))
       populateCurrentWeatherCardContent(cityName)
     }); 
+  // appends the newest search as a button
   var retrieveCityWeatherButton = $('<button>').attr({class: 'my-2', id: 'retrieve-weather-btn'}).text(cityName)
   savedSearchContainer.append(retrieveCityWeatherButton)
 }
@@ -116,12 +121,10 @@ async function populateCurrentWeatherCardContent(cityName) {
   var currentWeatherCardTemp = $('<text>').text(`Temp: ${currentWeatherData.temp} ℉`)
   var currentWeatherCardWind = $('<text>').text(`Wind: ${currentWeatherData.wind} MPH`)
   var currentWeatherCardHumidity = $('<text>').text(`Humidity: ${currentWeatherData.humidity} %`)
-  var weatherIcon 
   currentWeatherInfo.append(currentWeatherCardHeaderContainer)
   currentWeatherInfo.append(currentWeatherCardTemp)
   currentWeatherInfo.append(currentWeatherCardWind)
   currentWeatherInfo.append(currentWeatherCardHumidity)
-  currentWeatherInfo.append(weatherIcon)
 }
 
 async function populateForecastWeatherCardContent(cityName) {
@@ -147,6 +150,7 @@ async function populateForecastWeatherCardContent(cityName) {
   })
 }
 
+// built as IIFE to load in any saved information at first load
 (async function appendCitySearchButton() {
   var weatherData = await JSON.parse(localStorage.getItem("weatherData"))
 
