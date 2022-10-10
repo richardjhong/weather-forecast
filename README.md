@@ -9,7 +9,7 @@ This project uses [Bootstrap](https://getbootstrap.com/) for the frontend toolki
 This project introduces uses of third-party APIs and reinforces use of jQuery and Bootstrap as well as use of localStorage.
 
 ## Description
-The app allows a user to type in a city name and get its current weather and 5 day forecast. This also saves the search below the text entry which persists even if the user refreshes the page.
+The app allows a user to type in a city name and get its current weather and 5 day forecast (within imperial units e.g. MPH, Fahrenheit). This also saves the search below the text entry which persists even if the user refreshes the page.
 
 ## Architecture
 The majority of the app uses jQuery to dynamically inject elements into the page as needed; however to get the data needed for the weather to be displayed, three APIs are used. First a fetch is made on the Geocoding API based on a city name search within getLatLonCoordinates function. From this, an latitude, longitude pair of coordinates are returned and then chained into getWeather function. getWeather has lots of logic involved which will be explained later but for now, it handles the One Call API and Current Weather Data API, both of which require latitude and longitude coordinates, hence the first Geocoding API call. With the latter two API calls, data is then stored within localStorage as weatherData and then populateCurrentWeatherCardContent, populateForecastWeatherCardContent, and appendCitySearchButton functions each respectively fill their content section with dynamic information (appendCitySearchButton however is set as an immediately invoked function expression to load in any saved searches when the user revisits the page).
