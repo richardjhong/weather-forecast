@@ -84,7 +84,9 @@ async function getWeather(city) {
 formContainer.addEventListener('click', function(e) {
   if (e.target.id === 'submit-button') {
     var cityName = (cityTextInput.value)
-    getWeather(cityName)
+    if (cityName.length > 0) {
+      getWeather(cityName)
+    }
   }
 
   if (e.target.id === 'retrieve-weather-btn') {

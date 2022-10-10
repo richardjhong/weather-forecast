@@ -4,12 +4,10 @@
 }
 
 .weather-card {
-  border-color: black;
   height: 200px;
 }
 
 .forecast-container {
-  border-color: red;
   height: 500px;
 }
 
