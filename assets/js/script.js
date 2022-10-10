@@ -17,7 +17,7 @@ currentWeatherEl.append(forecastInfoContainer)
 contentContainerEl.append(currentWeatherEl)
 
 function getLatLonCoordinates(city) {
-  return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${APIKEY}&}`)
+  return fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${APIKEY}&}`)
     .then(response => response.json())
     .then(data => {
       [latitude, longitude] = [data[0].lat, data[0].lon]
