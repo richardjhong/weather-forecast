@@ -1,0 +1,13 @@
+hr {
+  height: 10px;
+}
+
+.weather-card {
+  border-color: black;
+  height: 200px;
+}
+
+.forecast-container {
+  border-color: red;
+  height: 500px;
+}
