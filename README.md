@@ -33,7 +33,7 @@ var weatherData = JSON.parse(localStorage.getItem("weatherData")) || {}
   }
 ```
   - The code snippet above checks whether weatherData within localStorage already exists or to make it into an object. Next, via the currentWeather.header and if it includes the currentDate, the app can know if there is any need to refetch data or if the data already stored has the currentDate; if not then there is outdated information that would require fetching of the newer date data. If the currentDate matches, then the weather cards are populated with information already within localStorage and a return is used to exit out of the function before getting to make the new fetch API calls.
-  - A for loop starting from 1 - 5 is called within the .then of the Open Call API. 1st index and onwards coorespond to tomorrow's weather and onward. 
+  - A for loop starting from 1 - 5 is called within the .then of the Open Call API. 1st index and onwards correspond to tomorrow's weather and onward. 
   - After the last fetch call within getWeather function, a button is appended to the savedSearchContainer to account for new entries that were not accounted for at first load of grabbing saved search results.
 
 ## Screenshot
