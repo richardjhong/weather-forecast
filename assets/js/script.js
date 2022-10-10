@@ -5,7 +5,7 @@ var APIKEY = '21ef4c0bff15173a6d1700345f872e1b'
 
 var contentContainerEl = $('#column-container')
 var currentWeatherEl = $('<div>')
-currentWeatherEl.attr({class: 'col-10 col-lg-6 weather-display-container'})
+currentWeatherEl.attr({class: 'col-10 .col-md-6 weather-display-container'})
 var savedSearchContainer = $('#saved-search-container')
 
 var currentWeatherInfo = $('<div>').attr({class: 'card p-3 my-3 weather-card d-flex flex-column'})
