@@ -15,7 +15,7 @@ The app allows a user to type in a city name and get its current weather and 5 d
 The majority of the app uses jQuery to dynamically inject elements into the page as needed; however to get the data needed for the weather to be displayed, three APIs are used. First a fetch is made on the Geocoding API based on a city name search within getLatLonCoordinates function. From this, an latitude, longitude pair of coordinates are returned and then chained into getWeather function. getWeather has lots of logic involved which will be explained later but for now, it handles the One Call API and Current Weather Data API, both of which require latitude and longitude coordinates, hence the first Geocoding API call. With the latter two API calls, data is then stored within localStorage as weatherData and then populateCurrentWeatherCardContent, populateForecastWeatherCardContent, and appendCitySearchButton functions each respectively fill their content section with dynamic information (appendCitySearchButton however is set as an immediately invoked function expression to load in any saved searches when the user revisits the page).
 
 At a more detailed look of getWeather function with its logic explained more in detail:
-  - The function getWeather itself uses async and await to yield the results of getLatLonCoordinates. Since the other two API calls requires lat, long coordiates it's necessary to have the results ready. 
+  - The function getWeather itself uses async and await to yield the results of getLatLonCoordinates. Since the other two API calls requires lat, long coordinates it's necessary to have the results ready. 
 
 ```
 var weatherData = JSON.parse(localStorage.getItem("weatherData")) || {}
@@ -38,6 +38,12 @@ var weatherData = JSON.parse(localStorage.getItem("weatherData")) || {}
 
 ## Screenshot
 ![screnshot](./assets/images/screenshot.png)
+
+## Livesite
+[Deployed on Github page](https://richardjhong.github.io/weather-forecast/)
+
+## Thoughts on improvement
+I tried to include logic to mitigate having to make API call requests unnecessarily within getWeather; however the getLatLonCoordinates helper method within is still called before the possible return statement. While I tried to move the getLatLonCoordinates to after the return statement, this shifted logic and moving parts to the point that the saved search button results had unexpected behavior with different interactions. I'd look into seeing how to improve this such that API calls requests are only made when needed reactively rather than proactively.
 
 
 
